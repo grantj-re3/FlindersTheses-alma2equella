@@ -3,6 +3,9 @@
 # Contributors: Library, Corporate Services, Flinders University.
 # See the accompanying LICENSE file (or http://opensource.org/licenses/BSD-3-Clause).
 #
+# This class attempts to clean the school info by mapping it to the
+# current school name.
+#
 ##############################################################################
 class NewSchoolCleaner
   DEBUG_KEY = false

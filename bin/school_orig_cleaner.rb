@@ -3,6 +3,14 @@
 # Contributors: Library, Corporate Services, Flinders University.
 # See the accompanying LICENSE file (or http://opensource.org/licenses/BSD-3-Clause).
 #
+# This class attempts to clean the original school info by:
+# - correcting typing errors
+# - consistently representing keywords such as "Dept.", "Centre"
+# - consistently representing dept, school, faculty, etc. names
+# - consistently sequencing by research centre/institute (first), dept,
+#   school, faculty (last)
+# - consistently applying capitalisation
+#
 ##############################################################################
 class SchoolOriginalCleaner
   DEBUG_SCHOOL = false

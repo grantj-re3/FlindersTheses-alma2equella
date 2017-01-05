@@ -7,7 +7,7 @@
 # Usage 1:  process_almaxml_wrap.sh
 # Usage 2:  process_almaxml_wrap.sh --debug
 #
-# Usage 1:
+# Usage 1 - program algorithm:
 # - Process theses which have been scanned into PDF format; filenames must
 #   conform to a particular format; metadata must exist within the Exlibris
 #   Alma integrated library management system.
@@ -17,7 +17,7 @@
 #   the batch)
 # - Generate call-number CSV for library collection maintenance.
 #
-# Usage 2:
+# Usage 2 - program algorithm:
 # - Process all XML bib records (which have been exported from Alma)
 # - Generate most of the XML metadata (one per thesis)
 #
