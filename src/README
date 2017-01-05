@@ -1,0 +1,8 @@
+Create the following directories here:
+- bibs_indiv: To store XML bib records exported from Alma
+- digitised:  To store scanned thesis PDFs (with filenames corresponding to a formula)
+
+Linux command:
+
+$ mkdir bibs_indiv digitised
+
