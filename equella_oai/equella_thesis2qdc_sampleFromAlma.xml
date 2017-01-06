@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="equella_thesis2qdc_sample.xsl"?>
+<xml>
+  <item id="257cdf32-178b-4cf5-8cbd-83d42eb5591d" itemdefid="1bb07d74-be3c-41b9-8467-3096c2d21f25" itemstatus="live" key="5297159" moderating="false" version="1">
+    <curriculum>
+      <people>
+        <students>
+          <student>
+            <firstname_display>Joey</firstname_display>
+            <lastname_display>Bloggs</lastname_display>
+          </student>
+        </students>
+      </people>
+      <thesis
+        collection_type="Scanned"
+        degree_type="Research Higher Degree"
+        marc_type="Doctorate"
+        selected_type="Doctor of Philosophy"
+        type="Doctor of Philosophy"
+      >
+        <title>TEST BBQs in the twenty first century</title>
+        <complete_year>2008</complete_year>
+        <keywords>
+          <keyword>BBQ, big</keyword>
+          <keyword>BBQ, medium</keyword>
+          <keyword>BBQ, small</keyword>
+          <keyword>Barbeque, spelling variations, northern hemisphere</keyword>
+        </keywords>
+        <subjects>
+          <subject>Cooking ,,Food preparation thesis</subject>
+          <subject>Domestic science thesis</subject>
+        </subjects>
+        <language>English</language>
+        <lib>
+          <scan_date>2016-12-07</scan_date>
+          <note>Future use. Eg. For overseas scholarship holder</note>
+        </lib>
+        <schools>
+          <primary>School of Examples</primary>
+        </schools>
+        <version>
+          <previous_identifier_url>mmsid:99111222333444</previous_identifier_url>
+          <open_access>
+            <required>version of record</required>
+          </open_access>
+          <examined_thesis>
+            <files>
+              <uuid>32e08d91-8863-4bc0-9fd8-0b5628fb5641</uuid>
+            </files>
+          </examined_thesis>
+          <thesis_version>2016 lib import version</thesis_version>
+          <abstract>
+            <text/>
+          </abstract>
+        </version>
+        <release>
+          <status>Open Access</status>
+        </release>
+        <publisher>Flinders University, School of Exemplars</publisher>
+      </thesis>
+    </curriculum>
+    <itembody>
+      <name>Another title</name>
+    </itembody>
+    <name>Yet another title</name>
+    <newitem>false</newitem>
+    <thumbnail>default</thumbnail>
+    <owner>yyyy1111</owner>
+    <datecreated>2016-12-14T13:25:36+1030</datecreated>
+    <datemodified>2016-12-14T13:25:36+1030</datemodified>
+    <dateforindex>2016-12-14T13:25:36+1030</dateforindex>
+    <attachments>
+      <attachment type="local">
+        <conversion>false</conversion>
+        <size>5649716</size>
+        <uuid>32e08d91-8863-4bc0-9fd8-0b5628fb5641</uuid>
+        <file>bbq_metadata1of3.txt</file>
+        <description>bbq_metadata1of3.txt</description>
+        <thumbnail>_THUMBS/bbq_metadata1of3.txt.jpeg</thumbnail>
+        <attributes/>
+      </attachment>
+      <attachment type="local">
+        <conversion>false</conversion>
+        <size>25</size>
+        <uuid>72efe4fc-66df-478e-bcd7-88baa525df28</uuid>
+        <file>bbq_metadata2of3.txt</file>
+        <description>bbq_metadata2of3.txt</description>
+        <attributes/>
+      </attachment>
+    </attachments>
+    <badurls/>
+    <history>
+      <contributed applies="false" date="2016-12-14T13:25:36+1030" state="draft" user="yyyy1111">yyyy1111</contributed>
+      <edit applies="false" date="2016-12-14T13:25:36+1030" state="draft" user="yyyy1111">yyyy1111</edit>
+      <statechange applies="false" date="2016-12-14T13:25:36+1030" state="live" user="yyyy1111">yyyy1111</statechange>
+    </history>
+    <moderation>
+      <liveapprovaldate>2016-12-14T13:25:36+1030</liveapprovaldate>
+    </moderation>
+  </item>
+  <institutionUrl>http://my_equella_server.example.com/</institutionUrl>
+</xml>

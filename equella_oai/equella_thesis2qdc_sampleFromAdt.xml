@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="equella_thesis2qdc_sample.xsl"?>
+<xml>
+  <item id="257cdf32-178b-4cf5-8cbd-83d42eb5591d" itemdefid="1bb07d74-be3c-41b9-8467-3096c2d21f25" itemstatus="live" key="5297159" moderating="false" version="1">
+    <curriculum>
+      <people>
+        <students>
+          <student id="00001111">
+            <name_display>Joe Bloggs</name_display>
+            <email>joe.bloggs@example.com</email>
+            <fan>xxxx0000</fan>
+            <firstname>proxy_firstname</firstname>
+            <lasttname>proxy_lastname</lasttname>
+            <firstname_display>Joe</firstname_display>
+            <lastname_display>Bloggs</lastname_display>
+          </student>
+        </students>
+        <coords>
+          <coord>
+            <name>Prof M.Y. Test</name>
+            <email>m.y@example.com</email>
+          </coord>
+        </coords>
+      </people>
+      <thesis
+        collection_type="RHD"
+        degree_type="Research Higher Degree"
+        marc_type="Doctorate"
+        selected_type="Doctor of Philosophy"
+        type="Doctor of Philosophy"
+      >
+        <version>
+          <abstract>
+            <text>TEST My abstract</text>
+            <uuid>85dfa196-d546-4f12-9739-067cf2698fd2</uuid>
+          </abstract>
+          <examined_thesis>
+            <files>
+              <uuid>72efe4fc-66df-478e-bcd7-88baa525df28</uuid>
+            </files>
+          </examined_thesis>
+          <open_access>
+            <required>version of record</required>
+          </open_access>
+          <thesis_version>2015 version 1</thesis_version>
+        </version>
+        <keywords>
+          <keyword> , BBQ , , Barbeque ,, </keyword>
+        </keywords>
+        <release>
+          <release_date>2015-12-04</release_date>
+          <status>Restricted Access</status>
+        </release>
+        <agreements>
+          <declaration>Yes</declaration>
+          <authenticity>I agree</authenticity>
+          <copyright>Yes</copyright>
+        </agreements>
+        <schools>
+          <primary>School of Examples</primary>
+        </schools>
+        <complete_year>2015-12-01</complete_year>
+        <subjects>
+          <subject> ,, Cooking ,,Food preparation</subject>
+          <subject>Baking, roasting, etc</subject>
+          <subject>Domestic science thesis</subject>
+        </subjects>
+        <title>TEST BBQs in the twenty first century</title>
+        <faculties>
+          <primary>Faculty of Examples</primary>
+        </faculties>
+        <publisher>University of Examples, School of Examples</publisher>
+        <language>English</language>
+      </thesis>
+    </curriculum>
+    <sys_variables>
+      <locks/>
+    </sys_variables>
+    <itembody>
+      <name>TEST BBQs in the twenty first century</name>
+      <description>TEST My abstract</description>
+    </itembody>
+    <name>TEST BBQs in the twenty first century</name>
+    <description>TEST My abstract</description>
+    <newitem>false</newitem>
+    <owner>xxxx0000</owner>
+    <datecreated>2015-05-01T15:01:10+0930</datecreated>
+    <datemodified>2015-05-01T15:27:42+0930</datemodified>
+    <dateforindex>2015-05-01T15:27:42+0930</dateforindex>
+    <rating average="-1.0"/>
+    <attachments>
+      <attachment type="local">
+        <conversion>false</conversion>
+        <size>25</size>
+        <uuid>85dfa196-d546-4f12-9739-067cf2698fd2</uuid>
+        <file>bbq_metadata1of3.txt</file>
+        <description>bbq_metadata1of3.txt</description>
+        <attributes/>
+      </attachment>
+      <attachment type="local">
+        <conversion>false</conversion>
+        <size>25</size>
+        <uuid>72efe4fc-66df-478e-bcd7-88baa525df28</uuid>
+        <file>bbq_metadata2of3.txt</file>
+        <description>bbq_metadata2of3.txt</description>
+        <attributes/>
+      </attachment>
+    </attachments>
+    <badurls/>
+  </item>
+  <institutionUrl>http://uni.example.com/</institutionUrl>
+</xml>
