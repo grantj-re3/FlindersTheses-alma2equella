@@ -16,7 +16,7 @@
 #
 ##############################################################################
 # Add dirs to the library path
-$: << File.expand_path(".", File.dirname(__FILE__))
+$: << File.expand_path("../etc", File.dirname(__FILE__))
 require "common_config"
 require "yaml"
 

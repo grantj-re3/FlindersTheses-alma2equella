@@ -14,7 +14,7 @@
 #     where NNNNNNNNNN is the numeric MMS ID.
 ##############################################################################
 # Add dirs to the library path
-$: << File.expand_path(".", File.dirname(__FILE__))
+$: << File.expand_path("../etc", File.dirname(__FILE__))
 require "common_config"
 
 class AddMmsid2FilenamesFactory

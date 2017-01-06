@@ -12,7 +12,7 @@
 #   * Copy scanned file to OUT_DIR/MMS_ID.d/meaningful_filename
 ##############################################################################
 # Add dirs to the library path
-$: << File.expand_path(".", File.dirname(__FILE__))
+$: << File.expand_path("../etc", File.dirname(__FILE__))
 require "common_config"
 
 require "fileutils"

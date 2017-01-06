@@ -24,9 +24,11 @@
 ##############################################################################
 APP_DIR_TEMP=`dirname "$0"`		# Might be relative (eg "." or "..") or absolute
 APP_DIR=`cd "$APP_DIR_TEMP" ; pwd`	# Absolute path of dir containing app
-SH_CONFIG="$APP_DIR/common_config.sh"
+ETC_DIR=`cd "$APP_DIR/../etc" ; pwd`	# Absolute path of etc dir
+LIB_DIR=`cd "$APP_DIR/../lib" ; pwd`	# Absolute path of lib dir
+SH_CONFIG="$ETC_DIR/common_config.sh"
 
-$APP_DIR/mk_common_config_sh.rb > $SH_CONFIG	# Create shell environment vars (from ruby vars)
+$LIB_DIR/mk_common_config_sh.rb > $SH_CONFIG	# Create shell environment vars (from ruby vars)
 source $SH_CONFIG
 
 # FIXME: Only use --backup=numbered option for development

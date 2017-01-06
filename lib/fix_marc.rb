@@ -18,7 +18,8 @@
 # - Etc.
 ##############################################################################
 # Add dirs to the library path
-$: << File.expand_path(".", File.dirname(__FILE__))
+$: << File.expand_path("../lib", File.dirname(__FILE__))
+$: << File.expand_path("../etc", File.dirname(__FILE__))
 require "school_new_cleaner.rb"
 require "school_orig_cleaner"
 

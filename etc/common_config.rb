@@ -12,15 +12,16 @@ module CommonConfig
   NEWLINE = "\n"
 
   TOP_DIR = File.expand_path("..", File.dirname(__FILE__))	# Top level dir
-  BIN_DIR = "#{TOP_DIR}/bin"
+  # BIN_DIR = "#{TOP_DIR}/bin"
+  LIB_DIR = "#{TOP_DIR}/lib"
 
   # Programs and scripts
-  FLATTEN_XSLT           = "#{BIN_DIR}/flatten.xsl"
-  FIXMARC_EXE            = "#{BIN_DIR}/fix_marc.rb"
-  PROC_SCANNED_FILES_EXE = "#{BIN_DIR}/process_scanned_files.rb"
-  ADD_EXTRAS2XML_EXE     = "#{BIN_DIR}/add_extras2xml.rb"
-  XML2EBI_CSV_XSLT       = "#{BIN_DIR}/xml2csv.xsl"
-  XML2CALLNUM_CSV_XSLT   = "#{BIN_DIR}/xml2csv_callnum.xsl"
+  FLATTEN_XSLT           = "#{LIB_DIR}/flatten.xsl"
+  FIXMARC_EXE            = "#{LIB_DIR}/fix_marc.rb"
+  PROC_SCANNED_FILES_EXE = "#{LIB_DIR}/process_scanned_files.rb"
+  ADD_EXTRAS2XML_EXE     = "#{LIB_DIR}/add_extras2xml.rb"
+  XML2EBI_CSV_XSLT       = "#{LIB_DIR}/xml2csv.xsl"
+  XML2CALLNUM_CSV_XSLT   = "#{LIB_DIR}/xml2csv_callnum.xsl"
 
   # Directories, files, file extensions, file globs, etc
   IN_SCAN_DIR     = "#{TOP_DIR}/src/digitised"
