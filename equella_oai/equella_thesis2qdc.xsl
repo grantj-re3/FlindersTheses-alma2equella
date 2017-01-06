@@ -278,7 +278,10 @@
 
   <!-- dc:description - first -->
   <xsl:template match="abstract/text">
-    <dc:description> <xsl:value-of select="." /> </dc:description>
+    <xsl:variable name="trimmed_str" select="normalize-space(.)" />
+    <xsl:if test="$trimmed_str != ''">
+      <dc:description> <xsl:value-of select="." /> </dc:description>
+    </xsl:if>
   </xsl:template>
 
   <!-- dc:description - second -->
