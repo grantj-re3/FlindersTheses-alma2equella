@@ -30,9 +30,10 @@ module CommonConfig
   BIB_FIX_LOG     = "#{OUT_DIR}/bibs_fix.err"	# BEWARE: File will be deleted then re-written
   EMBARGO_OUT_DIR = "#{OUT_DIR}_emb"
 
-  FNAME_ALL_LIST       = "#{OUT_DIR}/mmsids_all.txt"
-  FNAME_APPROVED_LIST  = "#{OUT_DIR}/mmsids_approved.txt"
-  FNAME_EMBARGOED_LIST = "#{OUT_DIR}/mmsids_embargoed.txt"
+  FNAME_ALL_LIST           = "#{OUT_DIR}/mmsids_all.txt"
+  FNAME_APPROVED_LIST      = "#{OUT_DIR}/mmsids_approved.txt"
+  FNAME_EMBARGOED_LIST     = "#{OUT_DIR}/mmsids_embargoed.txt"
+  FNAME_NOT_PROCESSED_LIST = "#{OUT_DIR}/mmsids_not_processed.txt"
 
   BIB_FNAME_EXT = ".xml"			# Include dot. Eg. ".xml"
   BIB_FNAME_GLOB = "#{IN_BIB_DIR}/rec*#{BIB_FNAME_EXT}"

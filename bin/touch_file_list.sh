@@ -7,7 +7,8 @@
 # touch_file_list.sh
 # See usage_exit() for usage.
 #
-# This script allows the user to create files on a Linux/Unix system
+# This script "touches" a large number of files in the current directory.
+# The script allows the user to create files on a Linux/Unix system
 # which are each zero bytes in length but have the same modified-dates
 # as the original files on some other system. In my case it allows me
 # to not have to SFTP 1GB for every 100 digitised thesis files. Having

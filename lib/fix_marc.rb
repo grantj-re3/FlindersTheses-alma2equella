@@ -191,6 +191,10 @@ class MarcXmlEnricher
         @kw650[key][code] ||= []			# An array of values for this MARC subfield
         @kw650[key][code] << value
 
+      # Process MARC 655
+      elsif line.match(/<meta.* tagcode="(655).*">(.*)<\/meta>/)
+        STDERR.puts "WARNING: #{rec_info} Ignoring MARC #{s6xx} keywords: '#{$2}'"
+
       else
         # FIXME: Masters - check
         STDERR.puts "WARNING: #{rec_info} MARC #{s6xx} exists but not processed!"
@@ -497,7 +501,8 @@ class MarcXmlEnricher
       when /\(doctor| ph\.d\.[ \)]|\((ph\.?d|m\.d|d\.ed|d\.sc|ed\. *d|d\. ed|edd|dr\.?p\.?h|d\.pub\.hlth)[\.\)]|\(dr of |\/phd\.d\)/i
         expected_dc = "Doctorate"
         type = "Doctor of Philosophy"
-        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{expected_dc})" unless @degree_categories.include?(expected_dc)
+        ##STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{expected_dc})" unless @degree_categories.include?(expected_dc)
+        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect})" unless @degree_categories.include?(expected_dc)
         type
 
       when /\(m\.a\. .*\(research\)/i

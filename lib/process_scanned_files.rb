@@ -83,6 +83,7 @@ class ScannedFilesProcessor
     @mms_ids_all = []
     @mms_ids_approved = []
     @mms_ids_embargoed = []
+    @mms_ids_not_processed = []
   end
 
   ############################################################################
@@ -238,20 +239,27 @@ class ScannedFilesProcessor
     @info_by_mms_id.each_key{|mms_id|
       re_fname_with_this_mms_id = /\.mmsid#{mms_id}#{Regexp.quote(BIB_FNAME_EXT)}$/
       fname = @bib_basenames.find{|f| f.match(re_fname_with_this_mms_id)}
-      @info_by_mms_id[mms_id][:bib_basename] = fname
-      STDERR.puts "WARNING: No related bib file found for MMS ID '#{mms_id}'" unless fname
+      if fname
+        @info_by_mms_id[mms_id][:bib_basename] = fname
+      else
+        # Prevent further processing by removing this MMS ID from the list
+        @info_by_mms_id.delete(mms_id)
+        @mms_ids_not_processed << mms_id
+        STDERR.puts "WARNING: No related bib file found for MMS ID '#{mms_id}'. Processing this record will halt."
+      end
     }
   end
 
   ############################################################################
   def create_dest_bib_file(mms_id, info)
-    bib_fpath = "#{IN_BIB_DIR}/#{info[:bib_basename]}"
     bib_fbase = info[:bib_basename]
+    bib_fpath = "#{IN_BIB_DIR}/#{bib_fbase}"
     xml_dest_fname = "#{OUT_DIR}/#{mms_id}#{BIB_OUT_FNAME_SUFFIX}"
     cmd = "xsltproc #{FLATTEN_XSLT} #{bib_fpath} | #{FIXMARC_EXE} #{bib_fbase} > #{xml_dest_fname} 2>> #{BIB_FIX_LOG}"
     STDERR.puts "INFO: Command: #{cmd}"
 
     output = %x{ #{cmd} }		# Execute OS command
+    # FIXME: Does not detect "xsltproc result code (since FIXMARC_EXE is run afterwards).
     res = $?
     unless res.to_s == "0"
       STDERR.puts <<-EO_MSG.gsub(/^\t*/, "")
@@ -607,6 +615,9 @@ class ScannedFilesProcessor
 
     mms_ids_str = @mms_ids_embargoed.join(NEWLINE) + NEWLINE
     File.open(FNAME_EMBARGOED_LIST, 'w').write(mms_ids_str)
+
+    mms_ids_str = @mms_ids_not_processed.join(NEWLINE) + NEWLINE
+    File.open(FNAME_NOT_PROCESSED_LIST, 'w').write(mms_ids_str)
   end
 
   ############################################################################
