@@ -32,6 +32,7 @@ class MarcXmlEnricher
   EMB_YEAR_MAX = 2040		# Max embargo year
 
   PUB_YEAR_RANGE = 1960..2016
+  AUTHOR_DATES_REGEX = /^(19|20)\d{2}-((19|20)\d{2})?$/	# Eg. "1950-" or "1950-2010"
 
   MONTH_PARAMS = [
     {:regex => /^january$/i,	:max_days => 31},
@@ -99,7 +100,7 @@ class MarcXmlEnricher
   def initialize(this_file_ref)
     @this_file_ref = this_file_ref || "NO_FILE_REF"
 
-    @titles = []				# Storage for field values
+    @titles = {}				# Storage for field values
     @pub_dates = []
     @diss_notes = []
 
@@ -114,6 +115,7 @@ class MarcXmlEnricher
     @mms_id = nil
     @marc008 = nil
     @marc100a = nil
+    @marc100d = nil
     @marc100q = nil
 
     @degree_categories = []
@@ -132,12 +134,16 @@ class MarcXmlEnricher
       @marc008 = $1
 
     # Process MARC 100
-    elsif line.match(/<meta.* tagcode="100\.(a|q)".* ind1="(.)" .*">(.*?),*<\/meta>/)
+    elsif line.match(/<meta.* tagcode="100\.(a|d|q)".* ind1="(.)" .*">(.*?),*<\/meta>/)
       code, ind1, value = Regexp.last_match[1..3]
       STDERR.puts "WARNING: #{rec_info} MARC 100 Indicator1 or name is empty!" unless ind1 && value
       if code == "a"
         STDERR.puts "WARNING: #{rec_info} MARC 100.a processing more than once for same record" if @marc100a
         @marc100a = {:ind1 => ind1, :name => value}
+
+      elsif code == "d"
+        STDERR.puts "WARNING: #{rec_info} MARC 100.d processing more than once for same record" if @marc100d
+        @marc100d = value
 
       else
         STDERR.puts "WARNING: #{rec_info} MARC 100.q processing more than once for same record" if @marc100q
@@ -145,8 +151,8 @@ class MarcXmlEnricher
       end
 
     # Process MARC 245
-    elsif line.match(/<meta.* tagcode="245\.[^ch]".*">(.*)<\/meta>/)
-      @titles << $1
+    elsif line.match(/<meta.* tagcode="245\.([^c])".*">(.*)<\/meta>/)
+      @titles[$1] = $2
 
     # Process MARC 260.c & 264.c
     elsif line.match(/<meta.* tagcode="(26[04]\.c)".*">(.*)<\/meta>/)
@@ -256,8 +262,30 @@ class MarcXmlEnricher
       STDERR.puts "WARNING: #{rec_info} Title not found"
       puts "    <meta tagcode=\"245.fixed1\">UNKNOWN_TITLE</meta>"
     else
-      title = @titles.join(' ').sub(/[\/ ,:;]*$/, '')
+      h_val = @titles["h"]
+      if h_val
+        # Typically:
+        # - true if h_val like "...[manuscript] :" or "...[manuscript] /"
+        # - false if alpha-numeric text appears after "[manuscript]"
+        ok = h_val.match(/
+          [\[\(\{]			# Open bracket char
+          [^\]\)\}]+			# Text for MARC 245.h (medium)
+          [\]\)\}]			# Close bracket char
+          [:;\ \/\.\-]*			# Trailing non-alpha chars
+          $				# End of string
+        /x)
+        STDERR.puts "WARNING: #{rec_info} Unexpected format or extra info in 245.h: '#{h_val}'" unless ok
 
+        if h_val.match(/:/) && @titles["a"]
+          a_val = @titles["a"].strip
+          @titles["a"] = "#{a_val} :" if a_val.match(/[\w"'\)]$/i)
+        end
+        @titles.delete("h")
+      end
+
+      title = @titles.sort.map{|a| a[1]}.join(' ').sub(/[\/ ,:;]*$/, '')
+
+      # FIXME: Use quote2()?
       # Escape double-quote for CSV compatibility. RFC 4180 says:
       #   If double-quotes are used to enclose fields, then a double-quote
       #   appearing inside a field must be escaped by preceding it with
@@ -409,6 +437,13 @@ class MarcXmlEnricher
     puts "    <meta tagcode=\"given_names.fixed1\">#{given_names}</meta>" if given_names
     puts "    <meta tagcode=\"full_name_display.fixed1\">#{full_name_display}</meta>" if full_name_display
 
+    dates = @marc100d.to_s.strip
+    unless dates.empty?
+      has_expected_dates = dates.match(AUTHOR_DATES_REGEX)
+      STDERR.puts "WARNING: %s Unexpected author dates '%s'. Does not match %s" %
+        [rec_info, dates, AUTHOR_DATES_REGEX.inspect] unless has_expected_dates
+      puts "    <meta tagcode=\"author_dates.fixed1\">#{dates}</meta>"
+    end
   end
 
   ############################################################################
