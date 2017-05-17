@@ -33,6 +33,7 @@ class MarcXmlEnricher
 
   PUB_YEAR_RANGE = 1960..2016
   AUTHOR_DATES_REGEX = /^(19|20)\d{2}-((19|20)\d{2})?$/	# Eg. "1950-" or "1950-2010"
+  NAME_TRAILING_INITIAL_MAYBE = /([^A-Z])\.$/
 
   MONTH_PARAMS = [
     {:regex => /^january$/i,	:max_days => 31},
@@ -365,7 +366,7 @@ class MarcXmlEnricher
   ############################################################################
   def show_author
     ind1 = @marc100a[:ind1]
-    name = @marc100a[:name].sub(/([^A-Z])\.$/, "\\1") # Discard trailing period unless /[A-Z]\.$/
+    name = @marc100a[:name].sub(NAME_TRAILING_INITIAL_MAYBE, "\\1") # Discard trailing period unless it is an initial
     surname = nil
     given_names = nil
     full_name_display = nil
@@ -378,13 +379,12 @@ class MarcXmlEnricher
       if fields.length == 2
         name.match(/^(.*), *(.*)$/)
         surname = $1
-        # FIXME: Gives worse result for 4/116 Doctorate cases.
-        # - Maybe append 100.q to given name instead of replace?
-        # - Maybe compare 100.q to given name and use the longest string?
+        given_names = $2.strip.squeeze(" ")
         if @marc100q
-          given_names = @marc100q.gsub(/^[\(]*|[\)\.]*$/, '')
-        else
-          given_names = $2
+          # Discard trailing period unless it is an initial
+          ff_names = @marc100q.gsub(/^\(*|\)*\.?$/, '').strip.squeeze(" ").sub(NAME_TRAILING_INITIAL_MAYBE, "\\1")
+          # Assume fuller-form names are "better" than given names if string is longer
+          given_names = ff_names if ff_names.gsub(/\W/, '').length > given_names.gsub(/\W/, '').length
         end
         full_name_display = "#{given_names} #{surname}"
 
@@ -422,7 +422,6 @@ class MarcXmlEnricher
 
       else	# >1 name
         # FIXME: Gives bad result (an initial?) for Masters
-        # FIXME: Check 100.q. Consider processing as above
         STDERR.puts "WARNING: #{rec_info} Ind1=#{ind1} & >1 name. Assuming surname on right. Name=#{name}"
         name.match(/^(.*) (.*)$/)
         surname = $2
