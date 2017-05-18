@@ -33,7 +33,7 @@ class MarcXmlEnricher
 
   PUB_YEAR_RANGE = 1960..2016
   AUTHOR_DATES_REGEX = /^(19|20)\d{2}-((19|20)\d{2})?$/	# Eg. "1950-" or "1950-2010"
-  NAME_TRAILING_INITIAL_MAYBE = /([^A-Z])\.$/
+  NAME_TRAILING_INITIAL_MAYBE = /([^A-Z])\.$/		# Probably a trailing initial (of a name)
 
   MONTH_PARAMS = [
     {:regex => /^january$/i,	:max_days => 31},
@@ -108,8 +108,8 @@ class MarcXmlEnricher
     @kw_list = []				# List of keywords (so we can avoid duplicates)
     @kw600 = {}
     @kw600_keys = []				# Keys for @kw600 (in the order they were read)
-    @kw650 = {}
-    @kw650_keys = []				# Keys for @kw650 (in the order they were read)
+    @kw_by_code = {}
+    @kw_by_code_keys = []			# Keys for @kw_by_code (in the order they were read)
 
     @is_embargoed = false
     @release_date = nil
@@ -177,26 +177,26 @@ class MarcXmlEnricher
     elsif line.match(/<meta.* tagcode="(6..)\.(.)"/)
       s6xx = $1 + "." + $2
 
-      # Process MARC 600, 610, 611, 630, 653
-      if line.match(/<meta.* tagcode="(600|610|611|630|653)\.(.)".* pid="([^"]+)".*">(.*?)[ :,]*<\/meta>/)
+      # Process MARC 600, 610, 611, 630, 650, 651, 653
+      if line.match(/<meta.* tagcode="(600|610|611|630|650|651|653)\.(.)".* pid="([^"]+)".*">(.*?)[ :,]*<\/meta>/)
         tag, code, pid, value = Regexp.last_match[1..4]
         key = [pid, tag]				# The key for this MARC field
         unless @kw600_keys.include?(key)
           @kw600_keys << key
           @kw600[key] = []				# An array of values for all MARC subfields
         end
-        @kw600[key] << value.sub(/([^A-Z])\.$/, "\\1")	# Discard trailing period unless /[A-Z]\.$/
+        @kw600[key] << value.sub(NAME_TRAILING_INITIAL_MAYBE, "\\1")	# Discard trailing period unless it is an initial
 
-      # Process MARC 650, 651, 695
-      elsif line.match(/<meta.* tagcode="(650|651|695)\.(.)".* pid="([^"]+)".*">(.*?)[,\.]*<\/meta>/)
+      # Process MARC 695
+      elsif line.match(/<meta.* tagcode="(695)\.(.)".* pid="([^"]+)".*">(.*?)[,\.]*<\/meta>/)
         tag, code, pid, value = Regexp.last_match[1..4]
         key = [pid, tag]				# The key for this MARC field
-        unless @kw650_keys.include?(key)
-          @kw650_keys << key
-          @kw650[key] = {}
+        unless @kw_by_code_keys.include?(key)
+          @kw_by_code_keys << key
+          @kw_by_code[key] = {}
         end
-        @kw650[key][code] ||= []			# An array of values for this MARC subfield
-        @kw650[key][code] << value
+        @kw_by_code[key][code] ||= []			# An array of values for this MARC subfield
+        @kw_by_code[key][code] << value
 
       # Process MARC 655
       elsif line.match(/<meta.* tagcode="(655).*">(.*)<\/meta>/)
@@ -300,7 +300,6 @@ class MarcXmlEnricher
   ############################################################################
   def show_keywords_subjects
     show_keywords_600
-    show_keywords_650
     show_subjects
   end
 
@@ -323,37 +322,13 @@ class MarcXmlEnricher
   end
 
   ############################################################################
-  # Show keywords for MARC 650, 651
-  def show_keywords_650
-    @kw650_keys.each{|key|	# Iterate thru tags in the same order we read them
-      # For this instance (parent ID) of this tag...
-      pid, tag = key
-      next if tag == "695"
-
-      # Process all subfields
-      h_tag = @kw650[key]
-      h_tag.sort.each{|code, values|
-        next if code == "x"	# We will process subfield "x" with "a"
-        s = values.join(', ')
-        s = s + ", " + h_tag['x'].join(', ') if code == "a" && h_tag['x']
-        unless @kw_list.include?(s) || s == ""
-          @kw_list << s
-          dbug_s = DEBUG_KEYWORDS ? "#{tag}.#{code}:" : ""
-          puts "    <meta tagcode=\"keywords.fixed1\">#{dbug_s}#{s}</meta>"
-        end
-      }
-    }
-  end
-
-  ############################################################################
   # Show subjects for MARC 695
   def show_subjects
-    @kw650_keys.each{|key|	# Iterate thru tags in the same order we read them
+    @kw_by_code_keys.each{|key|	# Iterate thru tags in the same order we read them
       # For this instance (parent ID) of this tag...
       pid, tag = key
-      next unless tag == "695"
 
-      h_tag = @kw650[key]
+      h_tag = @kw_by_code[key]
       next unless h_tag['a']
 
       h_tag['a'].each{|s|
@@ -495,12 +470,12 @@ class MarcXmlEnricher
     return if @are_degree_categories_processed	# Already processed
 
     @degree_categories = []
-    @kw650_keys.each{|key|	# Iterate thru tags in the same order we read them
+    @kw_by_code_keys.each{|key|	# Iterate thru tags in the same order we read them
       # For this instance (parent ID) of this tag...
       pid, tag = key
       next unless tag == "695"
 
-      h_tag = @kw650[key]
+      h_tag = @kw_by_code[key]
       next unless h_tag['d']
 
       h_tag['d'].each_with_index{|dc,i|
