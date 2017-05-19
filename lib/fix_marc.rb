@@ -104,6 +104,7 @@ class MarcXmlEnricher
     @titles = {}				# Storage for field values
     @pub_dates = []
     @diss_notes = []
+    @bib_notes = []
 
     @kw_list = []				# List of keywords (so we can avoid duplicates)
     @kw600 = {}
@@ -164,6 +165,10 @@ class MarcXmlEnricher
       # Process MARC 502.a
       if line.match(/<meta.* tagcode="502\.a".*">(.*)<\/meta>/)
         @diss_notes << $1
+
+      # Process MARC 504.a
+      elsif line.match(/<meta.* tagcode="504\.a".*">(.*)<\/meta>/)
+        @bib_notes << $1
       end
 
       # Process MARC 50X.a with a restriction (ie. probably an embargo)
@@ -234,6 +239,7 @@ class MarcXmlEnricher
     show_author
     show_keywords_subjects
 
+    show_bibliography_notes
     show_call_number
   end
 
@@ -497,6 +503,11 @@ class MarcXmlEnricher
     @degree_categories.each{|dc|
       puts "    <meta tagcode=\"degree_category.fixed1\">#{dc}</meta>"
     }
+  end
+
+  ############################################################################
+  def show_bibliography_notes
+    puts "    <meta tagcode=\"bibliography_notes.fixed1\">#{@bib_notes.join(', ')}</meta>" unless @bib_notes.empty?
   end
 
   ############################################################################
