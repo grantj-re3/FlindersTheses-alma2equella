@@ -105,6 +105,7 @@ class MarcXmlEnricher
     @pub_dates = []
     @diss_notes = []
     @bib_notes = []
+    @physical_descr = []
 
     @kw_list = []				# List of keywords (so we can avoid duplicates)
     @kw600 = {}
@@ -159,6 +160,10 @@ class MarcXmlEnricher
     # Process MARC 260.c & 264.c
     elsif line.match(/<meta.* tagcode="(26[04]\.c)".*">(.*)<\/meta>/)
       @pub_dates << {:tagcode => $1, :value => $2}
+
+    # Process MARC 300
+    elsif line.match(/<meta.* tagcode="300\.[ab]".*">(.*)<\/meta>/)
+      @physical_descr << $1
 
     # Process MARC 50X.a
     elsif line.match(/<meta.* tagcode="50[0-9]\.a"/)
@@ -239,6 +244,7 @@ class MarcXmlEnricher
     show_author
     show_keywords_subjects
 
+    show_physical_description
     show_bibliography_notes
     show_call_number
   end
@@ -508,6 +514,13 @@ class MarcXmlEnricher
   ############################################################################
   def show_bibliography_notes
     puts "    <meta tagcode=\"bibliography_notes.fixed1\">#{@bib_notes.join(', ')}</meta>" unless @bib_notes.empty?
+  end
+
+  ############################################################################
+  def show_physical_description
+    # FIXME: Check these look ok
+    s = @physical_descr.join(' ').gsub(/[ ;:,]*$/, "")
+    puts "    <meta tagcode=\"physical_description.fixed1\">#{s}</meta>" unless s.empty?
   end
 
   ############################################################################
