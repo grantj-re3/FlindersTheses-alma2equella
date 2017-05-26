@@ -291,7 +291,7 @@ class MarcXmlEnricher
 
         if h_val.match(/:/) && @titles["a"]
           a_val = @titles["a"].strip
-          @titles["a"] = "#{a_val} :" if a_val.match(/[\w"'\)]$/i)
+          @titles["a"] = "#{a_val}:" if a_val.match(/[\w"'\)]$/i)
         end
         @titles.delete("h")
       end
@@ -518,7 +518,6 @@ class MarcXmlEnricher
 
   ############################################################################
   def show_physical_description
-    # FIXME: Check these look ok
     s = @physical_descr.join(' ').gsub(/[ ;:,]*$/, "")
     puts "    <meta tagcode=\"physical_description.fixed1\">#{s}</meta>" unless s.empty?
   end
