@@ -318,22 +318,32 @@ class ScannedFilesProcessor
   ############################################################################
   def create_dest_basename(mms_id, parts)
     # Examples of destination filenames:
-    #   Thesis-Surnameone-1987.pdf
+    #   # 1 volume; no extra material
+    #   Thesis-Surname-1987.pdf		# No sequence number if only 1 file
     #
-    #   Thesis-Surnametwo-1987-01.pdf
-    #   Thesis-Surnametwo-1987-02.pdf
-    #   Thesis-Surnametwo-1987-03-cdrom.zip
-    #   Thesis-Surnametwo-1987-04-floppyA.zip
-    #   Thesis-Surnametwo-1987-05-floppyB.zip
+    #   # 2 volumes; no extra material
+    #   Thesis-Surname-1987-01.pdf
+    #   Thesis-Surname-1987-02.pdf
+    #
+    #   # 1 volume; with extra material
+    #   Thesis-Surname-1987-01.pdf
+    #   Thesis-Surname-1987-02-cdrom.zip
+    #
+    #   # 2 volumes; with extra material
+    #   Thesis-Surname-1987-01.pdf
+    #   Thesis-Surname-1987-02.pdf
+    #   Thesis-Surname-1987-03-cdrom.zip
 
     year = get_thesis_year(mms_id)
     authorname = get_authorname(mms_id)
 
-    omit_seq = @info_by_mms_id[mms_id][:filetype_counts][:thesis_vol] == 1 && parts[:descr].nil?
-    seq = omit_seq ? "" : sprintf("-%02d", parts[:seq_num].to_i)
-    descr = parts[:descr] ? "-x_#{parts[:descr]}" : ""
-    dest_fbase = "Thesis-#{authorname}-#{year}#{seq}#{descr}.#{parts[:ext]}"
-    parts[:dest_basename] = dest_fbase
+    counts = @info_by_mms_id[mms_id][:filetype_counts]
+    seq_num_offset = counts[:thesis_vol] == 1 ? 1 : 0
+    omit_seq = counts[:thesis_vol] == 1 && counts[:extra_matl] == 0
+    seq = omit_seq ? "" : sprintf("-%02d", parts[:seq_num].to_i + seq_num_offset)
+
+    descr = parts[:descr] ? "-#{parts[:descr]}" : ""
+    parts[:dest_basename] = "Thesis-#{authorname}-#{year}#{seq}#{descr}.#{parts[:ext]}"
   end
 
   ############################################################################
