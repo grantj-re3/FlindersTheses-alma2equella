@@ -32,7 +32,7 @@ class MarcXmlEnricher
   EMB_YEAR_MAX = 2040		# Max embargo year
 
   PUB_YEAR_RANGE = 1960..2016
-  AUTHOR_DATES_REGEX = /^(19|20)\d{2}-((19|20)\d{2})?$/	# Eg. "1950-" or "1950-2010"
+  AUTHOR_DATES_REGEX = /^((19|20)\d{2})-((19|20)\d{2})?$/	# Eg. "1950-" or "1950-2010"
   NAME_TRAILING_INITIAL_MAYBE = /([^A-Z])\.$/		# Probably a trailing initial (of a name)
 
   MONTH_PARAMS = [
@@ -423,12 +423,22 @@ class MarcXmlEnricher
     puts "    <meta tagcode=\"given_names.fixed1\">#{given_names}</meta>" if given_names
     puts "    <meta tagcode=\"full_name_display.fixed1\">#{full_name_display}</meta>" if full_name_display
 
+    show_author_dates
+  end
+
+  ############################################################################
+  def show_author_dates
     dates = @marc100d.to_s.strip
     unless dates.empty?
       has_expected_dates = dates.match(AUTHOR_DATES_REGEX)
       STDERR.puts "WARNING: %s Unexpected author dates '%s'. Does not match %s" %
         [rec_info, dates, AUTHOR_DATES_REGEX.inspect] unless has_expected_dates
       puts "    <meta tagcode=\"author_dates.fixed1\">#{dates}</meta>"
+
+      date_of_birth = $1
+      date_of_death = $3
+      puts "    <meta tagcode=\"author_date_of_birth.fixed1\">#{date_of_birth}</meta>" if date_of_birth
+      puts "    <meta tagcode=\"author_date_of_death.fixed1\">#{date_of_death}</meta>" if date_of_death
     end
   end
 

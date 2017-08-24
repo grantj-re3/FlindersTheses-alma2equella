@@ -108,18 +108,21 @@
       <xsl:when test="$is_csv_header">
         <xsl:value-of select="concat($field_delim, $quote, 'item/curriculum/people/students/student/lastname_display', $quote)" />
         <xsl:value-of select="concat($field_delim, $quote, 'item/curriculum/people/students/student/firstname_display', $quote)" />
-        <xsl:value-of select="concat($field_delim, $quote, 'item/curriculum/people/students/student/author_dates_FIXME', $quote)" />
+        <xsl:value-of select="concat($field_delim, $quote, 'item/curriculum/thesis/author_dates/birth', $quote)" />
+        <xsl:value-of select="concat($field_delim, $quote, 'item/curriculum/thesis/author_dates/death', $quote)" />
       </xsl:when>
 
       <!-- Metadata corresponding to the above CSV header -->
       <xsl:otherwise>
         <xsl:variable name="surname" select="/flat_marc_record/flat1/meta[@tagcode='surname.fixed1']" />
         <xsl:variable name="given_names" select="/flat_marc_record/flat1/meta[@tagcode='given_names.fixed1']" />
-        <xsl:variable name="author_dates" select="/flat_marc_record/flat1/meta[@tagcode='author_dates.fixed1']" />
+        <xsl:variable name="author_date_of_birth" select="/flat_marc_record/flat1/meta[@tagcode='author_date_of_birth.fixed1']" />
+        <xsl:variable name="author_date_of_death" select="/flat_marc_record/flat1/meta[@tagcode='author_date_of_death.fixed1']" />
 
         <xsl:value-of select="concat($field_delim, $quote, $surname, $quote)" />
         <xsl:value-of select="concat($field_delim, $quote, $given_names, $quote)" />
-        <xsl:value-of select="concat($field_delim, $quote, $author_dates, $quote)" />
+        <xsl:value-of select="concat($field_delim, $quote, $author_date_of_birth, $quote)" />
+        <xsl:value-of select="concat($field_delim, $quote, $author_date_of_death, $quote)" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
