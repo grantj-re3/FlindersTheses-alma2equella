@@ -17,6 +17,8 @@
 #   repeating fields.
 # - Etc.
 ##############################################################################
+require "date"
+
 # Add dirs to the library path
 $: << File.expand_path("../lib", File.dirname(__FILE__))
 $: << File.expand_path("../etc", File.dirname(__FILE__))
@@ -32,7 +34,6 @@ class MarcXmlEnricher
   EMB_YEAR_MAX = 2040		# Max embargo year
 
   PUB_YEAR_RANGE = 1960..2016
-  AUTHOR_DATES_REGEX = /^((19|20)\d{2})-((19|20)\d{2})?$/	# Eg. "1950-" or "1950-2010"
   NAME_TRAILING_INITIAL_MAYBE = /([^A-Z])\.$/		# Probably a trailing initial (of a name)
 
   MONTH_PARAMS = [
@@ -51,6 +52,12 @@ class MarcXmlEnricher
     {:regex => /^november$/i,	:max_days => 30},
     {:regex => /^december$/i,	:max_days => 31},
   ]
+
+  MONTH_NAMES = Date::MONTHNAMES.find_all{|s| s}		# ["January", ...  "December"]
+  MONTH_ABBREVIATIONS = MONTH_NAMES.map{|s| s[0,3]}		# ["Jan", ... "Dec"]
+  MONTH_REGEX = (MONTH_NAMES + MONTH_ABBREVIATIONS).join("|")	# "January|...|December|Jan|...|Dec"
+  # Eg. "1950-" or "1950-2010" or "1946 Apr. 10-" or "1946 Apr. 10-1999 June 3"
+  AUTHOR_DATES_REGEX = /^((19|20)\d{2})( (#{MONTH_REGEX})\.? \d{1,2})?-(((19|20)\d{2})( (#{MONTH_REGEX})\.? \d{1,2})?)?\.?$/i
 
   # Excerpt from http://www.loc.gov/marc/languages/language_code.html
   LANGUAGES = {
@@ -435,8 +442,8 @@ class MarcXmlEnricher
         [rec_info, dates, AUTHOR_DATES_REGEX.inspect] unless has_expected_dates
       puts "    <meta tagcode=\"author_dates.fixed1\">#{dates}</meta>"
 
-      date_of_birth = $1
-      date_of_death = $3
+      date_of_birth = $1	# 4-digit year
+      date_of_death = $6	# 4-digit year
       puts "    <meta tagcode=\"author_date_of_birth.fixed1\">#{date_of_birth}</meta>" if date_of_birth
       puts "    <meta tagcode=\"author_date_of_death.fixed1\">#{date_of_death}</meta>" if date_of_death
     end
