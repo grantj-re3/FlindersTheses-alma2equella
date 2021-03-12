@@ -70,7 +70,12 @@ class MarcXmlEnricher
     "spa" => "Spanish",
   }
 
-  DEGREE_CATEGORIES = %w{Doctorate Masters}
+  #DEGREE_CATEGORIES = %w{Doctorate Masters}
+  DEGREE_CATEGORIES = %w{Doctorate}	# Only doctorates being processed in 2020
+  MARC_DEGREE_CATEGORIES = {
+    :field 			=> "695",
+    :subfield			=> "d",
+  }
 
   OPTS_CLEAN_ORIG_SCHOOL = {
     :attr			=> :school,
@@ -502,12 +507,12 @@ class MarcXmlEnricher
     @kw_by_code_keys.each{|key|	# Iterate thru tags in the same order we read them
       # For this instance (parent ID) of this tag...
       pid, tag = key
-      next unless tag == "695"
+      next unless tag == MARC_DEGREE_CATEGORIES[:field]
 
       h_tag = @kw_by_code[key]
-      next unless h_tag['d']
+      next unless h_tag[ MARC_DEGREE_CATEGORIES[:subfield] ]
 
-      h_tag['d'].each_with_index{|dc,i|
+      h_tag[ MARC_DEGREE_CATEGORIES[:subfield] ].each_with_index{|dc,i|
         unless @degree_categories.include?(dc)
           @degree_categories << dc
           STDERR.puts "WARNING: #{rec_info} Invalid degree-category: '#{dc}'" unless DEGREE_CATEGORIES.include?(dc)
@@ -544,27 +549,27 @@ class MarcXmlEnricher
     # FIXME: Test @degree_categories against type
     process_degree_categories
     thesis_type = nil
+    s_marc_dc = "#{MARC_DEGREE_CATEGORIES[:field]}#{MARC_DEGREE_CATEGORIES[:subfield]}"
 
     @diss_notes.each{|dnote|
       thesis_type = case dnote
       when /\(doctor| ph\.d\.[ \)]|\((ph\.?d|m\.d|d\.ed|d\.sc|ed\. *d|d\. ed|edd|dr\.?p\.?h|d\.pub\.hlth)[\.\)]|\(dr of |\/phd\.d\)/i
         expected_dc = "Doctorate"
         type = "Doctor of Philosophy"
-        ##STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{expected_dc})" unless @degree_categories.include?(expected_dc)
-        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect})" unless @degree_categories.include?(expected_dc)
+        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect}) in #{s_marc_dc}" unless @degree_categories.include?(expected_dc)
         type
 
       when /\(m\.a\. .*\(research\)/i
         expected_dc = "Masters"
         type = "Masters by Research"
-        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{expected_dc})" unless @degree_categories.include?(expected_dc)
+        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect}) in #{s_marc_dc}" unless @degree_categories.include?(expected_dc)
         type
 
       # FIXME: Incomplete!
       when /\(master of |\(M\. *(A|Biotech|Ec|Ed|Pol|Psych|Sc|Soc)\./i
         expected_dc = "Masters"
         type = "Masters by UNKNOWN_METHOD"
-        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{expected_dc})" unless @degree_categories.include?(expected_dc)
+        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect}) in #{s_marc_dc}" unless @degree_categories.include?(expected_dc)
         type
       end
       break if thesis_type
