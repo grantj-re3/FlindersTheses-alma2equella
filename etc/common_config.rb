@@ -16,12 +16,13 @@ module CommonConfig
   LIB_DIR = "#{TOP_DIR}/lib"
 
   # Programs and scripts
-  FLATTEN_XSLT           = "#{LIB_DIR}/flatten.xsl"
-  FIXMARC_EXE            = "#{LIB_DIR}/fix_marc.rb"
-  PROC_SCANNED_FILES_EXE = "#{LIB_DIR}/process_scanned_files.rb"
-  ADD_EXTRAS2XML_EXE     = "#{LIB_DIR}/add_extras2xml.rb"
-  XML2EBI_CSV_XSLT       = "#{LIB_DIR}/xml2csv.xsl"
-  XML2CALLNUM_CSV_XSLT   = "#{LIB_DIR}/xml2csv_callnum.xsl"
+  FLATTEN_XSLT              = "#{LIB_DIR}/flatten.xsl"
+  FIXMARC_EXE               = "#{LIB_DIR}/fix_marc.rb"
+  PROC_SCANNED_FILES_EXE    = "#{LIB_DIR}/process_scanned_files.rb"
+  ADD_EXTRAS2XML_EXE        = "#{LIB_DIR}/add_extras2xml.rb"
+  XML2EBI_CSV_XSLT          = "#{LIB_DIR}/xml2csv.xsl"
+  XML2CALLNUM_CSV_XSLT      = "#{LIB_DIR}/xml2csv_callnum.xsl"
+  XML2SCANFILENAME_CSV_XSL  = "#{LIB_DIR}/xml2csv_mk_newfilename.xsl"
 
   # Directories, files, file extensions, file globs, etc
   IN_SCAN_DIR     = "#{TOP_DIR}/src/digitised"

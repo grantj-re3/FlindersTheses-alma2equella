@@ -364,6 +364,10 @@ class MarcXmlEnricher
 
   ############################################################################
   def show_author
+    unless @marc100a
+      STDERR.puts "ERROR: #{rec_info} 100a does not exist. No XML name elements will be written."
+      return
+    end
     ind1 = @marc100a[:ind1]
     name = @marc100a[:name].sub(NAME_TRAILING_INITIAL_MAYBE, "\\1") # Discard trailing period unless it is an initial
     surname = nil
@@ -571,6 +575,12 @@ class MarcXmlEnricher
         type = "Masters by UNKNOWN_METHOD"
         STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect}) in #{s_marc_dc}" unless @degree_categories.include?(expected_dc)
         type
+
+      when /(^|\W)(hons|honours)(\W|$)/i
+        expected_dc = "Honours"
+        type = "Honours"
+        STDERR.puts "WARNING: #{rec_info} Type (#{type}) does not match expected degree category (#{@degree_categories.inspect}) in #{s_marc_dc}" unless @degree_categories.include?(expected_dc)
+        type
       end
       break if thesis_type
     }
@@ -588,7 +598,7 @@ class MarcXmlEnricher
     school_is_found = false	# Is a school found corresponding to this thesis?
     is_this_uni = false		# Only process theses published at this university
     @diss_notes.each{|note|
-      is_this_uni = true if note.match(/^(thesis|research|project|dissertation|theses|typescript).*\(.+\).*-{1,2}.*flinders +(univ|institute)/i)
+      is_this_uni = true if note.match(/^(thesis|research|project|dissertation|theses|typescript).*-{1,2}.*flinders +(univ|institute)/i)
 
       # Perform a broad match (before extracting the school-string)
       # FIXME: scool?
